@@ -1,0 +1,371 @@
+/* === Base === */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  background: #ffffff;
+  color: #1a1a1a;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  min-height: 100vh;
+  padding-top: 16px;
+  -webkit-user-select: none;
+  user-select: none;
+}
+
+#app {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
+}
+
+/* === Header === */
+#header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 436px;
+}
+
+#title {
+  font-size: 24px;
+  font-weight: 700;
+  letter-spacing: 2px;
+}
+
+#header-controls {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+#difficulty-select {
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: 500;
+  padding: 6px 12px;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  background: #ffffff;
+  color: #374151;
+  cursor: pointer;
+  transition: background 0.15s, border-color 0.15s;
+}
+
+#difficulty-select:hover {
+  background: #f3f4f6;
+  border-color: #9ca3af;
+}
+
+#difficulty-select:focus {
+  outline: 2px solid #93c5fd;
+  outline-offset: 1px;
+}
+
+#error-counter {
+  font-size: 13px;
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+#error-counter.err-ok {
+  color: #6b7280;
+}
+
+#error-counter.err-warn {
+  color: #f59e0b;
+}
+
+#error-counter.err-danger {
+  color: #dc2626;
+}
+
+#new-game-btn {
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: 500;
+  padding: 6px 16px;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  background: #ffffff;
+  color: #374151;
+  cursor: pointer;
+  transition: background 0.15s, border-color 0.15s;
+}
+
+#new-game-btn:hover {
+  background: #f3f4f6;
+  border-color: #9ca3af;
+}
+
+#new-game-btn:active {
+  background: #e5e7eb;
+}
+
+/* === Board === */
+#board {
+  border-collapse: collapse;
+}
+
+.cell {
+  width: 48px;
+  height: 48px;
+  text-align: center;
+  vertical-align: middle;
+  font-size: 22px;
+  font-weight: 400;
+  border: 1px solid #c4c4c4;
+  cursor: pointer;
+  transition: background 0.1s;
+  position: relative;
+}
+
+/* 3x3 box borders — thicker bottom borders on every 3rd row */
+tr:nth-child(3) .cell,
+tr:nth-child(6) .cell,
+tr:nth-child(9) .cell {
+  border-bottom: 2px solid #333333;
+}
+
+/* 3x3 box borders — thicker right borders on every 3rd column */
+tr .cell:nth-child(3),
+tr .cell:nth-child(6),
+tr .cell:nth-child(9) {
+  border-right: 2px solid #333333;
+}
+
+/* Top edge of the board */
+tr:first-child .cell {
+  border-top: 2px solid #333333;
+}
+
+/* Left edge of the board */
+tr .cell:first-child {
+  border-left: 2px solid #333333;
+}
+
+/* === Cell states === */
+.cell-given {
+  color: #1a1a1a;
+  font-weight: 700;
+}
+
+.cell-user {
+  color: #2563eb;
+}
+
+.cell-selected {
+  background: #dbeafe;
+}
+
+.cell-conflict {
+  color: #dc2626;
+  background: #fecaca;
+}
+
+.cell-same-number {
+  background: #e5e7eb;
+}
+
+/* === Cell notes === */
+.cell-notes {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-template-rows: repeat(3, 1fr);
+  font-size: 9px;
+  line-height: 1;
+  color: #6b7280;
+  position: absolute;
+  inset: 2px;
+  pointer-events: none;
+}
+
+.cell-notes span {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* === Cell game-over dimming === */
+.cell-gameover {
+  opacity: 0.45;
+  pointer-events: none;
+}
+
+/* === Notes toggle button === */
+#notes-toggle-row {
+  display: flex;
+  justify-content: center;
+}
+
+#notes-toggle-btn {
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: 500;
+  padding: 6px 18px;
+  color: #1f2937;
+  background: #f9fafb;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background 0.15s, border-color 0.15s;
+}
+
+#notes-toggle-btn:hover {
+  background: #f3f4f6;
+  border-color: #9ca3af;
+}
+
+#notes-toggle-btn.active {
+  background: #fef3c7;
+  border-color: #f59e0b;
+  color: #92400e;
+}
+
+/* === Numpad === */
+#numpad {
+  display: grid;
+  grid-template-columns: repeat(5, 44px);
+  gap: 6px;
+  justify-content: center;
+}
+
+.num-btn {
+  width: 44px;
+  height: 44px;
+  font-family: inherit;
+  font-size: 18px;
+  font-weight: 500;
+  color: #1f2937;
+  background: #f9fafb;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.15s, border-color 0.15s, transform 0.1s;
+}
+
+.num-btn:hover {
+  background: #f3f4f6;
+  border-color: #9ca3af;
+}
+
+.num-btn:active {
+  background: #e5e7eb;
+  transform: scale(0.95);
+}
+
+.erase-btn {
+  font-size: 20px;
+  color: #6b7280;
+}
+
+/* === Win Modal === */
+#win-modal {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.45);
+  z-index: 100;
+  justify-content: center;
+  align-items: center;
+}
+
+#win-modal-content {
+  background: #ffffff;
+  border-radius: 12px;
+  padding: 40px 48px;
+  text-align: center;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.18);
+}
+
+#win-modal-content h2 {
+  font-size: 22px;
+  font-weight: 700;
+  margin-bottom: 20px;
+  color: #1a1a1a;
+}
+
+#play-again-btn {
+  font-family: inherit;
+  font-size: 15px;
+  font-weight: 500;
+  padding: 10px 28px;
+  border: none;
+  border-radius: 8px;
+  background: #2563eb;
+  color: #ffffff;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+
+#play-again-btn:hover {
+  background: #1d4ed8;
+}
+
+#play-again-btn:active {
+  background: #1e40af;
+}
+
+/* === Lose Modal === */
+#lose-modal {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.45);
+  z-index: 100;
+  justify-content: center;
+  align-items: center;
+}
+
+#lose-modal-content {
+  background: #ffffff;
+  border-radius: 12px;
+  padding: 40px 48px;
+  text-align: center;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.18);
+}
+
+#lose-modal-content h2 {
+  font-size: 22px;
+  font-weight: 700;
+  margin-bottom: 12px;
+  color: #1a1a1a;
+}
+
+#lose-message {
+  font-size: 15px;
+  color: #6b7280;
+  margin-bottom: 24px;
+}
+
+#retry-btn {
+  font-family: inherit;
+  font-size: 15px;
+  font-weight: 500;
+  padding: 10px 28px;
+  border: none;
+  border-radius: 8px;
+  background: #dc2626;
+  color: #ffffff;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+
+#retry-btn:hover {
+  background: #b91c1c;
+}
+
+#retry-btn:active {
+  background: #991b1b;
+}

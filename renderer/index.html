@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>数独</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div id="app">
+    <header id="header">
+      <h1 id="title">数独</h1>
+      <div id="header-controls">
+        <select id="difficulty-select" onchange="startNewGame()">
+          <option value="easy">简单</option>
+          <option value="medium" selected>中级</option>
+          <option value="hard">高级</option>
+          <option value="expert">专家</option>
+        </select>
+        <span id="error-counter">剩余 ❌ × 3</span>
+      </div>
+      <button id="new-game-btn" onclick="startNewGame()">新游戏</button>
+    </header>
+
+    <table id="board">
+      <tbody>
+        <tr>
+          <td class="cell" data-row="0" data-col="0" onclick="selectCell(0,0)"></td>
+          <td class="cell" data-row="0" data-col="1" onclick="selectCell(0,1)"></td>
+          <td class="cell" data-row="0" data-col="2" onclick="selectCell(0,2)"></td>
+          <td class="cell" data-row="0" data-col="3" onclick="selectCell(0,3)"></td>
+          <td class="cell" data-row="0" data-col="4" onclick="selectCell(0,4)"></td>
+          <td class="cell" data-row="0" data-col="5" onclick="selectCell(0,5)"></td>
+          <td class="cell" data-row="0" data-col="6" onclick="selectCell(0,6)"></td>
+          <td class="cell" data-row="0" data-col="7" onclick="selectCell(0,7)"></td>
+          <td class="cell" data-row="0" data-col="8" onclick="selectCell(0,8)"></td>
+        </tr>
+        <tr>
+          <td class="cell" data-row="1" data-col="0" onclick="selectCell(1,0)"></td>
+          <td class="cell" data-row="1" data-col="1" onclick="selectCell(1,1)"></td>
+          <td class="cell" data-row="1" data-col="2" onclick="selectCell(1,2)"></td>
+          <td class="cell" data-row="1" data-col="3" onclick="selectCell(1,3)"></td>
+          <td class="cell" data-row="1" data-col="4" onclick="selectCell(1,4)"></td>
+          <td class="cell" data-row="1" data-col="5" onclick="selectCell(1,5)"></td>
+          <td class="cell" data-row="1" data-col="6" onclick="selectCell(1,6)"></td>
+          <td class="cell" data-row="1" data-col="7" onclick="selectCell(1,7)"></td>
+          <td class="cell" data-row="1" data-col="8" onclick="selectCell(1,8)"></td>
+        </tr>
+        <tr>
+          <td class="cell" data-row="2" data-col="0" onclick="selectCell(2,0)"></td>
+          <td class="cell" data-row="2" data-col="1" onclick="selectCell(2,1)"></td>
+          <td class="cell" data-row="2" data-col="2" onclick="selectCell(2,2)"></td>
+          <td class="cell" data-row="2" data-col="3" onclick="selectCell(2,3)"></td>
+          <td class="cell" data-row="2" data-col="4" onclick="selectCell(2,4)"></td>
+          <td class="cell" data-row="2" data-col="5" onclick="selectCell(2,5)"></td>
+          <td class="cell" data-row="2" data-col="6" onclick="selectCell(2,6)"></td>
+          <td class="cell" data-row="2" data-col="7" onclick="selectCell(2,7)"></td>
+          <td class="cell" data-row="2" data-col="8" onclick="selectCell(2,8)"></td>
+        </tr>
+        <tr>
+          <td class="cell" data-row="3" data-col="0" onclick="selectCell(3,0)"></td>
+          <td class="cell" data-row="3" data-col="1" onclick="selectCell(3,1)"></td>
+          <td class="cell" data-row="3" data-col="2" onclick="selectCell(3,2)"></td>
+          <td class="cell" data-row="3" data-col="3" onclick="selectCell(3,3)"></td>
+          <td class="cell" data-row="3" data-col="4" onclick="selectCell(3,4)"></td>
+          <td class="cell" data-row="3" data-col="5" onclick="selectCell(3,5)"></td>
+          <td class="cell" data-row="3" data-col="6" onclick="selectCell(3,6)"></td>
+          <td class="cell" data-row="3" data-col="7" onclick="selectCell(3,7)"></td>
+          <td class="cell" data-row="3" data-col="8" onclick="selectCell(3,8)"></td>
+        </tr>
+        <tr>
+          <td class="cell" data-row="4" data-col="0" onclick="selectCell(4,0)"></td>
+          <td class="cell" data-row="4" data-col="1" onclick="selectCell(4,1)"></td>
+          <td class="cell" data-row="4" data-col="2" onclick="selectCell(4,2)"></td>
+          <td class="cell" data-row="4" data-col="3" onclick="selectCell(4,3)"></td>
+          <td class="cell" data-row="4" data-col="4" onclick="selectCell(4,4)"></td>
+          <td class="cell" data-row="4" data-col="5" onclick="selectCell(4,5)"></td>
+          <td class="cell" data-row="4" data-col="6" onclick="selectCell(4,6)"></td>
+          <td class="cell" data-row="4" data-col="7" onclick="selectCell(4,7)"></td>
+          <td class="cell" data-row="4" data-col="8" onclick="selectCell(4,8)"></td>
+        </tr>
+        <tr>
+          <td class="cell" data-row="5" data-col="0" onclick="selectCell(5,0)"></td>
+          <td class="cell" data-row="5" data-col="1" onclick="selectCell(5,1)"></td>
+          <td class="cell" data-row="5" data-col="2" onclick="selectCell(5,2)"></td>
+          <td class="cell" data-row="5" data-col="3" onclick="selectCell(5,3)"></td>
+          <td class="cell" data-row="5" data-col="4" onclick="selectCell(5,4)"></td>
+          <td class="cell" data-row="5" data-col="5" onclick="selectCell(5,5)"></td>
+          <td class="cell" data-row="5" data-col="6" onclick="selectCell(5,6)"></td>
+          <td class="cell" data-row="5" data-col="7" onclick="selectCell(5,7)"></td>
+          <td class="cell" data-row="5" data-col="8" onclick="selectCell(5,8)"></td>
+        </tr>
+        <tr>
+          <td class="cell" data-row="6" data-col="0" onclick="selectCell(6,0)"></td>
+          <td class="cell" data-row="6" data-col="1" onclick="selectCell(6,1)"></td>
+          <td class="cell" data-row="6" data-col="2" onclick="selectCell(6,2)"></td>
+          <td class="cell" data-row="6" data-col="3" onclick="selectCell(6,3)"></td>
+          <td class="cell" data-row="6" data-col="4" onclick="selectCell(6,4)"></td>
+          <td class="cell" data-row="6" data-col="5" onclick="selectCell(6,5)"></td>
+          <td class="cell" data-row="6" data-col="6" onclick="selectCell(6,6)"></td>
+          <td class="cell" data-row="6" data-col="7" onclick="selectCell(6,7)"></td>
+          <td class="cell" data-row="6" data-col="8" onclick="selectCell(6,8)"></td>
+        </tr>
+        <tr>
+          <td class="cell" data-row="7" data-col="0" onclick="selectCell(7,0)"></td>
+          <td class="cell" data-row="7" data-col="1" onclick="selectCell(7,1)"></td>
+          <td class="cell" data-row="7" data-col="2" onclick="selectCell(7,2)"></td>
+          <td class="cell" data-row="7" data-col="3" onclick="selectCell(7,3)"></td>
+          <td class="cell" data-row="7" data-col="4" onclick="selectCell(7,4)"></td>
+          <td class="cell" data-row="7" data-col="5" onclick="selectCell(7,5)"></td>
+          <td class="cell" data-row="7" data-col="6" onclick="selectCell(7,6)"></td>
+          <td class="cell" data-row="7" data-col="7" onclick="selectCell(7,7)"></td>
+          <td class="cell" data-row="7" data-col="8" onclick="selectCell(7,8)"></td>
+        </tr>
+        <tr>
+          <td class="cell" data-row="8" data-col="0" onclick="selectCell(8,0)"></td>
+          <td class="cell" data-row="8" data-col="1" onclick="selectCell(8,1)"></td>
+          <td class="cell" data-row="8" data-col="2" onclick="selectCell(8,2)"></td>
+          <td class="cell" data-row="8" data-col="3" onclick="selectCell(8,3)"></td>
+          <td class="cell" data-row="8" data-col="4" onclick="selectCell(8,4)"></td>
+          <td class="cell" data-row="8" data-col="5" onclick="selectCell(8,5)"></td>
+          <td class="cell" data-row="8" data-col="6" onclick="selectCell(8,6)"></td>
+          <td class="cell" data-row="8" data-col="7" onclick="selectCell(8,7)"></td>
+          <td class="cell" data-row="8" data-col="8" onclick="selectCell(8,8)"></td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div id="notes-toggle-row">
+      <button id="notes-toggle-btn" onclick="window.toggleNotesMode()">📝 笔记</button>
+    </div>
+
+    <div id="numpad">
+      <button class="num-btn" onclick="inputNumber(1)">1</button>
+      <button class="num-btn" onclick="inputNumber(2)">2</button>
+      <button class="num-btn" onclick="inputNumber(3)">3</button>
+      <button class="num-btn" onclick="inputNumber(4)">4</button>
+      <button class="num-btn" onclick="inputNumber(5)">5</button>
+      <button class="num-btn" onclick="inputNumber(6)">6</button>
+      <button class="num-btn" onclick="inputNumber(7)">7</button>
+      <button class="num-btn" onclick="inputNumber(8)">8</button>
+      <button class="num-btn" onclick="inputNumber(9)">9</button>
+      <button class="num-btn erase-btn" onclick="clearCell()">⌫</button>
+    </div>
+  </div>
+
+  <div id="win-modal">
+    <div id="win-modal-content">
+      <h2>恭喜完成！</h2>
+      <button id="play-again-btn" onclick="startNewGame()">再来一局</button>
+    </div>
+  </div>
+
+  <div id="lose-modal">
+    <div id="lose-modal-content">
+      <h2>游戏结束 😢</h2>
+      <p id="lose-message">错误次数已用完</p>
+      <button id="retry-btn" onclick="startNewGame()">重新开始</button>
+    </div>
+  </div>
+
+  <script src="game.js"></script>
+  <script>
+    function startNewGame() {
+      const sel = document.getElementById('difficulty-select');
+      const difficulty = sel ? sel.value : 'medium';
+      window.newGame(difficulty);
+    }
+
+    function render() {
+      const g = window.game;
+
+      // Clear all cell classes and content
+      document.querySelectorAll('.cell').forEach(cell => {
+        cell.className = 'cell';
+        cell.textContent = '';
+      });
+
+      // Render board
+      for (let r = 0; r < 9; r++) {
+        for (let c = 0; c < 9; c++) {
+          const val = g.board[r][c];
+          const cell = document.querySelector(`.cell[data-row="${r}"][data-col="${c}"]`);
+
+          if (val !== 0) {
+            cell.textContent = val;
+            cell.classList.add(g.isGiven(r, c) ? 'cell-given' : 'cell-user');
+          } else {
+            // Show notes for empty cells
+            const notes = g.getNotes(r, c);
+            if (notes && notes.length > 0) {
+              const notesGrid = document.createElement('div');
+              notesGrid.className = 'cell-notes';
+              for (let n = 1; n <= 9; n++) {
+                const span = document.createElement('span');
+                span.textContent = notes.includes(n) ? n : '';
+                notesGrid.appendChild(span);
+              }
+              cell.appendChild(notesGrid);
+            }
+          }
+
+          // Conflict highlight
+          if (g.conflicts.has(`${r}-${c}`)) {
+            cell.classList.add('cell-conflict');
+          }
+
+          // Game-over dimming
+          if (g.isGameOver) {
+            cell.classList.add('cell-gameover');
+          }
+        }
+      }
+
+      // Selected cell highlight
+      if (g.selectedCell) {
+        const sel = document.querySelector(`.cell[data-row="${g.selectedCell.row}"][data-col="${g.selectedCell.col}"]`);
+        if (sel) sel.classList.add('cell-selected');
+
+        // Same-number highlight
+        const same = g.getSameNumberCells(g.selectedCell.row, g.selectedCell.col);
+        same.forEach(([sr, sc]) => {
+          const c = document.querySelector(`.cell[data-row="${sr}"][data-col="${sc}"]`);
+          if (c && !(sr === g.selectedCell.row && sc === g.selectedCell.col)) {
+            c.classList.add('cell-same-number');
+          }
+        });
+      }
+
+      // Notes toggle button state
+      const notesBtn = document.getElementById('notes-toggle-btn');
+      if (notesBtn) {
+        if (g.notesMode) {
+          notesBtn.classList.add('active');
+        } else {
+          notesBtn.classList.remove('active');
+        }
+      }
+
+      // Error counter
+      const errCounter = document.getElementById('error-counter');
+      if (errCounter) {
+        const remaining = g.remainingErrors ? g.remainingErrors() : 0;
+        errCounter.textContent = `剩余 ❌ × ${remaining}`;
+        errCounter.classList.remove('err-ok', 'err-warn', 'err-danger');
+        if (remaining >= 2) {
+          errCounter.classList.add('err-ok');
+        } else if (remaining === 1) {
+          errCounter.classList.add('err-warn');
+        } else {
+          errCounter.classList.add('err-danger');
+        }
+      }
+
+      // Win modal
+      if (g.isComplete && !g.isGameOver) {
+        document.getElementById('win-modal').style.display = 'flex';
+      } else {
+        document.getElementById('win-modal').style.display = 'none';
+      }
+
+      // Lose modal
+      if (g.isGameOver) {
+        document.getElementById('lose-modal').style.display = 'flex';
+      } else {
+        document.getElementById('lose-modal').style.display = 'none';
+      }
+    }
+    render();
+  </script>
+</body>
+</html>
