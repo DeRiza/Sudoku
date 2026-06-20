@@ -14,8 +14,8 @@ Electron 桌面数独游戏，纯 HTML/CSS/JS 实现。
 
 ```bash
 # 1. 克隆仓库
-git clone https://github.com/DeRiza/pickle.git
-cd pickle
+git clone https://github.com/DeRiza/Sudoku.git
+cd Sudoku
 
 # 2. 安装依赖
 npm install
