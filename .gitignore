@@ -7,3 +7,4 @@ debug_test.js
 manual_review.js
 test_runner.js
 test_flash.js
+test_*.js

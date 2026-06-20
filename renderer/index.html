@@ -19,7 +19,7 @@
         </select>
         <span id="error-counter">错误 0/4</span>
       </div>
-      <button id="new-game-btn" onclick="startNewGame()">新游戏</button>
+      <button id="new-game-btn" onclick="forceNewGame()">新游戏</button>
     </header>
 
     <table id="board">
@@ -128,7 +128,10 @@
 
     <div id="timer-row">
       <span id="timer">00:00</span>
-      <button id="notes-toggle-btn" onclick="window.toggleNotesMode()">📝 笔记</button>
+      <div id="timer-row-right">
+        <button id="auto-notes-btn" onclick="window.autoFillNotes()">⚡ 自动笔记</button>
+        <button id="notes-toggle-btn" onclick="window.toggleNotesMode()">📝 笔记</button>
+      </div>
     </div>
 
     <div id="numpad">
@@ -148,7 +151,7 @@
   <div id="win-modal">
     <div id="win-modal-content">
       <h2>恭喜完成！</h2>
-      <button id="play-again-btn" onclick="startNewGame()">再来一局</button>
+      <button id="play-again-btn" onclick="forceNewGame()">再来一局</button>
     </div>
   </div>
 
@@ -156,7 +159,7 @@
     <div id="lose-modal-content">
       <h2>游戏结束 😢</h2>
       <p id="lose-message">错误次数已用完</p>
-      <button id="retry-btn" onclick="startNewGame()">重新开始</button>
+      <button id="retry-btn" onclick="forceNewGame()">重新开始</button>
     </div>
   </div>
 
@@ -165,6 +168,32 @@
     function startNewGame() {
       var sel = document.getElementById('difficulty-select');
       var difficulty = sel ? sel.value : 'medium';
+
+      // Save current game progress before switching difficulty
+      if (window.game && !window.game.isComplete && !window.game.isGameOver) {
+        window.game.saveGame();
+      }
+
+      // Check if there is a saved game for the target difficulty
+      if (window.SudokuGame && window.SudokuGame.hasSave(difficulty)) {
+        var saved = window.SudokuGame.loadGame(difficulty);
+        if (saved) {
+          window.game = saved;
+          localStorage.setItem('sudoku_last_difficulty', difficulty);
+          render();
+          return;
+        }
+      }
+
+      // No saved game — start fresh
+      localStorage.setItem('sudoku_last_difficulty', difficulty);
+      window.newGame(difficulty);
+    }
+
+    function forceNewGame() {
+      var sel = document.getElementById('difficulty-select');
+      var difficulty = sel ? sel.value : 'medium';
+      if (window.SudokuGame) window.SudokuGame.clearSave(difficulty);
       localStorage.setItem('sudoku_last_difficulty', difficulty);
       window.newGame(difficulty);
     }
@@ -211,7 +240,11 @@
               notesGrid.className = 'cell-notes';
               for (var n = 1; n <= 9; n++) {
                 var span = document.createElement('span');
-                span.textContent = notes.indexOf(n) !== -1 ? n : '';
+                var hasNote = notes.indexOf(n) !== -1;
+                span.textContent = hasNote ? n : '';
+                if (hasNote && g.highlightedNumber === n) {
+                  span.classList.add('note-highlighted');
+                }
                 notesGrid.appendChild(span);
               }
               cell.appendChild(notesGrid);
@@ -337,6 +370,18 @@
       }
     }, 1000);
 
+
+    // Click outside board/num-buttons to deselect
+    document.addEventListener('click', function(e) {
+      if (e.target.classList.contains('cell') || e.target.classList.contains('num-btn')) {
+        return;
+      }
+      if (window.game && window.game.selectedCell) {
+        window.game.selectedCell = null;
+        window.game.clearHighlight();
+        render();
+      }
+    });
     // Init game: load save or start fresh
     (function initGame() {
       var savedDifficulty = localStorage.getItem('sudoku_last_difficulty') || 'medium';
@@ -363,6 +408,9 @@
         if (window.game && !window.game.isComplete && !window.game.isGameOver) {
           window.game.saveGame();
           localStorage.setItem('sudoku_last_difficulty', window.game.difficulty);
+        }
+        if (window.electronAPI.sendSaveComplete) {
+          window.electronAPI.sendSaveComplete();
         }
       });
     }

@@ -1,8 +1,10 @@
-const { app, BrowserWindow } = require('electron');
+const { app, BrowserWindow, ipcMain } = require('electron');
 const path = require('path');
 
+let mainWindow = null;
+
 function createWindow() {
-  const win = new BrowserWindow({
+  mainWindow = new BrowserWindow({
     width: 520,
     height: 750,
     resizable: true,
@@ -16,20 +18,28 @@ function createWindow() {
     },
   });
 
-  win.setMenuBarVisibility(false);
-  win.loadFile(path.join(__dirname, 'renderer', 'index.html'));
+  mainWindow.setMenuBarVisibility(false);
+  mainWindow.loadFile(path.join(__dirname, 'renderer', 'index.html'));
+
+  // 拦截关闭事件，先让渲染进程保存
+  mainWindow.on('close', function(e) {
+    if (mainWindow && !mainWindow.isDestroyed()) {
+      e.preventDefault();  // 阻止立即关闭
+      mainWindow.webContents.send('save-before-quit');
+      // 渲染进程保存完毕后会发 'save-complete'，那时才真正退出
+    }
+  });
 }
 
-app.whenReady().then(createWindow);
-
-app.on('before-quit', function() {
-  // Notify renderer to save game state before quitting
-  var win = BrowserWindow.getAllWindows()[0];
-  if (win) {
-    win.webContents.send('save-before-quit');
+// 渲染进程确认保存完毕后，真正退出
+ipcMain.on('save-complete', function() {
+  if (mainWindow) {
+    mainWindow.destroy();  // 真正关闭窗口
   }
 });
 
-app.on('window-all-closed', () => {
+app.whenReady().then(createWindow);
+
+app.on('window-all-closed', function() {
   app.quit();
 });

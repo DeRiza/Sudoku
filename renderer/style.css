@@ -194,6 +194,13 @@ tr .cell:first-child {
   justify-content: center;
 }
 
+.cell-notes span.note-highlighted {
+  font-weight: 700;
+  color: #ea580c;
+  background: #fef9c3;
+  border-radius: 2px;
+}
+
 /* === Cell game-over dimming === */
 .cell-gameover {
   opacity: 0.45;
@@ -382,6 +389,34 @@ tr .cell:first-child {
   font-size: 16px;
   font-family: "SF Mono", "Menlo", "Monaco", "Courier New", monospace;
   color: #6b7280;
+}
+
+#timer-row-right {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+}
+
+#auto-notes-btn {
+  font-family: inherit;
+  font-size: 12px;
+  font-weight: 500;
+  padding: 4px 10px;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  background: #ffffff;
+  color: #374151;
+  cursor: pointer;
+  transition: background 0.15s, border-color 0.15s;
+}
+
+#auto-notes-btn:hover {
+  background: #f0fdf4;
+  border-color: #22c55e;
+}
+
+#auto-notes-btn:active {
+  background: #dcfce7;
 }
 
 /* === Feature 3: Smart numpad disabled buttons === */

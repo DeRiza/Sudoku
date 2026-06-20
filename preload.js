@@ -4,5 +4,8 @@ contextBridge.exposeInMainWorld('electronAPI', {
   platform: process.platform,
   onSaveBeforeQuit: function(callback) {
     ipcRenderer.on('save-before-quit', callback);
+  },
+  sendSaveComplete: function() {
+    ipcRenderer.send('save-complete');
   }
 });

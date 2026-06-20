@@ -6,11 +6,12 @@
   "main": "main.js",
   "scripts": {
     "start": "electron .",
-    "build": "electron-builder --mac"
+    "build": "electron-builder --mac",
+    "build:win": "electron-builder --win"
   },
   "build": {
     "appId": "com.sudoku.app",
-    "productName": "数独",
+    "productName": "Windows X86 V1.0",
     "files": [
       "main.js",
       "preload.js",
@@ -18,6 +19,9 @@
     ],
     "mac": {
       "target": "dmg"
+    },
+    "win": {
+      "target": "nsis"
     }
   },
   "devDependencies": {

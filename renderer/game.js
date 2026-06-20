@@ -183,7 +183,12 @@ function SudokuGame(difficulty, puzzleIndex, savedState) {
 SudokuGame.prototype.selectCell = function (row, col) {
   if (row >= 0 && row < 9 && col >= 0 && col < 9) {
     this.selectedCell = { row: row, col: col };
-    this.clearHighlight();
+    // 如果格子已有数字，高亮该数字；否则清除高亮
+    if (this.board[row][col] !== 0) {
+      this.highlightedNumber = this.board[row][col];
+    } else {
+      this.clearHighlight();
+    }
   }
 };
 
@@ -289,6 +294,7 @@ SudokuGame.prototype.inputNumber = function (n) {
     }
   }
   this.notes[row][col] = 0; // Clear notes when placing a number
+  this._clearNoteFromPeers(row, col, n);
 
   this._updateConflicts();
 
@@ -593,6 +599,31 @@ SudokuGame.prototype._updateConflicts = function () {
         for (var i = 0; i < cellConflicts.length; i++) {
           this.conflicts.add(cellConflicts[i].row + '-' + cellConflicts[i].col);
         }
+      }
+    }
+  }
+};
+
+SudokuGame.prototype._clearNoteFromPeers = function (row, col, n) {
+  var bit = 1 << (n - 1);
+  var r, c;
+
+  for (c = 0; c < 9; c++) {
+    if (c !== col && this.board[row][c] === 0) {
+      this.notes[row][c] &= ~bit;
+    }
+  }
+  for (r = 0; r < 9; r++) {
+    if (r !== row && this.board[r][col] === 0) {
+      this.notes[r][col] &= ~bit;
+    }
+  }
+  var boxRow = Math.floor(row / 3) * 3;
+  var boxCol = Math.floor(col / 3) * 3;
+  for (r = boxRow; r < boxRow + 3; r++) {
+    for (c = boxCol; c < boxCol + 3; c++) {
+      if ((r !== row || c !== col) && this.board[r][c] === 0) {
+        this.notes[r][c] &= ~bit;
       }
     }
   }
